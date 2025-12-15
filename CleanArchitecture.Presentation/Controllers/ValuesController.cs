@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
+
+
+namespace CleanArchitecture.Presentation.Controllers
+{
+
+    [ApiController]
+    [Route("api/[controller]")]
+    public sealed  class ValuesController : ControllerBase
+    {
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok("Api İşlemi Başarılı");
+        }
+
+    }
+}
