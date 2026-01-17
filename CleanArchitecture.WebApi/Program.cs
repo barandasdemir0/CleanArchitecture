@@ -1,9 +1,19 @@
-﻿using CleanArchitecture.Application;
+﻿using AutoMapper;
+using System.Reflection;
+using System.Linq;
+using CleanArchitecture.Application;
+using CleanArchitecture.Application.Behaviors;
 using CleanArchitecture.Application.Services;
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Persistance;
 using CleanArchitecture.Persistance.Context;
 using CleanArchitecture.Persistance.Services;
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using CleanArchitecture.WebApi.Middleware;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +25,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 
 builder.Services.AddControllers()
@@ -29,7 +41,18 @@ builder.Services.AddMediatR(cfr =>
     cfr.RegisterServicesFromAssembly(typeof(CleanArchitecture.Application.AssemblyReference).Assembly);
 });
 
-builder.Services.AddScoped<ICarService,CarService>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviors<,>));
+
+builder.Services.AddValidatorsFromAssembly(typeof(CleanArchitecture.Application.AssemblyReference).Assembly);
+
+
+builder.Services.AddAutoMapper(typeof(CleanArchitecture.Persistance.AssemblyReference).Assembly);
+
+
+
+
+
+builder.Services.AddScoped<ICarService, CarService>();
 
 
 var app = builder.Build();
@@ -42,7 +65,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseMiddlewareExtension();
 
 app.UseHttpsRedirection();
 
