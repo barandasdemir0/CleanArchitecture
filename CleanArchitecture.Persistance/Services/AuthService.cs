@@ -1,0 +1,35 @@
+﻿using AutoMapper;
+using CleanArchitecture.Application.Features.AuthFeatures.Commands.Register;
+using CleanArchitecture.Application.Services;
+using CleanArchitecture.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CleanArchitecture.Persistance.Services
+{
+    public sealed class AuthService : IAuthService
+    {
+
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IMapper _mapper;
+
+        public AuthService(UserManager<AppUser> userManager, IMapper mapper)
+        {
+            _userManager = userManager;
+            _mapper = mapper;
+        }
+
+        public async Task RegisterAsync(RegisterCommand request)
+        {
+            AppUser appUser = _mapper.Map<AppUser>(request);
+            IdentityResult result =  await _userManager.CreateAsync(appUser,request.password);
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.Errors.First().Description);
+            }
+
+        }
+    }
+}
