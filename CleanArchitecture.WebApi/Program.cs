@@ -13,6 +13,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using CleanArchitecture.WebApi.Middleware;
+using GenericRepository;
+using CleanArchitecture.Domain.Repositories;
+using CleanArchitecture.Persistance.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +30,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 builder.Services.AddTransient<ExceptionMiddleware>();
+
+
+builder.Services.AddScoped<IUnitOfWork>(cfg => cfg.GetRequiredService<AppDbContext>());
+builder.Services.AddScoped<ICarRepository, CarRepository>();
+
 
 
 builder.Services.AddControllers()

@@ -1,6 +1,9 @@
 ﻿using CleanArchitecture.Application.Features.CarFeatures.Commands.CreteCar;
+using CleanArchitecture.Application.Features.CarFeatures.Queries.GetAllCar;
 using CleanArchitecture.Domain.Dtos;
+using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Presentation.Abstraction;
+using EntityFrameworkCorePagination.Nuget.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,12 +25,15 @@ namespace CleanArchitecture.Presentation.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        public IActionResult Calculate()
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetAll(GetAllCarQuery request , CancellationToken cancellation)
         {
-            return Ok(10 / int.Parse("0"));
-            
+            PaginationResult<Car> cars = await _mediator.Send(request,cancellation);
+            return Ok(cars);
         }
+
+
+        
 
     }
 }

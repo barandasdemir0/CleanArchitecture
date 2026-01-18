@@ -13,10 +13,7 @@
     <PackageReference Include="MediatR" Version="14.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.9" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\CarFeatures\Queries\" />
+	  <PackageReference Include="TS.EntityFrameworkCore.Pagination" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
