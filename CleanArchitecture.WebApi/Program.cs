@@ -18,6 +18,8 @@ using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Persistance.Repositories;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using CleanArchitecture.Infrastructure.Services;
+using CleanArchitecture.WebApi.OptionsSetup;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +41,14 @@ builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.AddScoped<IUnitOfWork>(cfg => cfg.GetRequiredService<AppDbContext>());
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMailService,MailService>();
+
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
+builder.Services.ConfigureOptions<JwtBearerOptionSetup>();
+
+
+
+builder.Services.AddAuthentication().AddJwtBearer();
 
 
 
